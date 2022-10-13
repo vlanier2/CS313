@@ -32,7 +32,8 @@ class Node(object):
     getNext():
         Returns the value of next_node attribute
     """
-    def __init__(self, data = None, next_node = None):
+
+    def __init__(self, data=None, next_node=None):
         """
         Initializes a Node containing the given data and 
         pointing to the given Node
@@ -60,7 +61,7 @@ class Node(object):
 
     def getData(self):
         '''Return the "data" data field.'''
-        return self.data
+        return self.__data
 
     def getNext(self):
         '''Return the "next_node" data field.'''
@@ -70,13 +71,16 @@ class Node(object):
 class Queue(object):
     """
     Initializes a standard FIFO Queue
-    
+
     ...
 
     Attributes
     ------
-    ask question??
-    
+    head : object of class Node
+        pointer to the node at the head of the queue
+    tail : object of class Node
+        pointer to the node at the tail of the queue
+
     Methods
     -----
     enqueue(newData : int or float):
@@ -86,45 +90,60 @@ class Queue(object):
     isEmpty():
         returns True of the queue is empty, otherwise returns False 
     """
+
     def __init__(self):
         self.__head = None
         self.__tail = None
 
     def __str__(self):
-        '''Loop through your queue and print each Node's data.'''
-        pass
+        '''Returns a string representation of the current Queue'''
+        curr_node = self.__head
+        string_rep = str('[')
+        while curr_node:
+            string_rep += f'{curr_node.getData()}, '
+            curr_node = curr_node.getNext()
+        return string_rep[:-2] + ']'
 
     def enqueue(self, newData):
-        '''Create a new node whose data is newData and whose next node is null
-        Update head and tail.'''
-        # Hint: Think about what's different for the first node added to the Queue
-        pass
+        '''Add a Node containing newData to the end of the Queue'''
+        newNode = Node(newData)
+
+        if self.isEmpty():
+            self.__head = newNode
+        else:
+            self.__tail.setNext(newNode)
+        self.__tail = newNode
+        
 
     def dequeue(self):
-        '''Return the head of the Queue
-        Update head.'''
-        #  Hint: The order you implement the above 2 tasks matters, so use a temporary node
-        #          to hold important information
-        #  Hint: Return null on a empty Queue
-        # Hint: Return the element(data) that is dequeued.
-        pass
+        '''
+        Removes and returns the data at the head of the Queue.
+        Returns None if the queue is empty.
+        '''
+        if self.isEmpty(): return None
+        
+        data, next_node = self.__head.getData(), self.__tail.getNext()
+        self.__head = next_node
+        return data
 
     def isEmpty(self):
-        '''Check if the Queue is empty.'''
-        pass
+        '''Returns True if the Queue is empty. Otherwise returns False.'''
+        if self.__head is None:
+            assert self.__tail is None
+            return True
 
 
 class Stack(object):
     """
     Initializes a standard LIFO Stack
-    
+
     ...
 
     Attributes
     ------
-    top : object of class Node
+    head : object of class Node
         pointer to the node at the top of the stack
-    
+
     Methods
     -----
     push(newData : int or float):
@@ -140,36 +159,32 @@ class Stack(object):
         self.head = None
 
     def __str__(self):
-        '''Loop through your stack and print each Node's data.'''
+        '''Returns a string representation of the current stack'''
         curr_node = self.head
-        string_rep = str()        
+        string_rep = str('[')
         while curr_node:
-            string_rep += f' {curr_node.getData()}'
+            string_rep += f'{curr_node.getData()}, '
             curr_node = curr_node.getNext()
-        return string_rep
+        return string_rep[:-2] + ']'
 
     def push(self, newData):
-        '''We want to create a node whose data is newData and next node is top.
-        Push this new node onto the stack
-        Update top'''
+        '''Places a node containing newData on the top of the stack'''
         newNode = Node(newData, self.head)
         self.head = newNode
 
     def pop(self):
-        ''' Return the Node that currently represents the top of the stack.
-        Update top'''
-        # Hint: The order you implement the above 2 tasks matters, so use a temporary node
-        #         to hold important information
-        # Hint: Return null on a empty stack
-        # Hint: Return the element(data) that is popped
-        
+        ''' 
+        Removes and returns the data currently at the top of the stack.
+        Returns None if the stack is empty.
+        '''
+        if self.isEmpty(): return None
         head_node = self.head
         self.head = head_node.getNext()
         return head_node.getData()
 
     def isEmpty(self):
-        '''Check if the Stack is empty.'''
-        pass
+        '''Returns True if the stack is empty. Otherwise returns False.'''
+        return self.head is None
 
 
 def isPalindrome(s):
