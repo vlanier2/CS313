@@ -1,6 +1,6 @@
 """
 lab1.py
-Solutiion for lab1 CS313 - 
+Solution for lab1 CS313 - 
     - implements stack and queue using singly linked list
     - Extra credit TwoStackQueue implemented
     - Data structures used for palindrome checking fuction

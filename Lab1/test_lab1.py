@@ -24,7 +24,8 @@ class T0_TestingQueue(unittest.TestCase):
 
     def test_dequeue_empty(self):
         q = lab1.Queue()
-        self.assertRaises(AttributeError, q.dequeue)
+        with self.assertRaises(AttributeError):
+            q.dequeue()
 
     def test_dequeue_once(self):
         q = lab1.Queue()
@@ -65,7 +66,8 @@ class T1_TestingStack(unittest.TestCase):
     def test_pop_empty(self):
         s = lab1.Stack()
         print("Raise AttributeError on empty pop")
-        self.assertRaises(AttributeError, s.pop)
+        with self.assertRaises(AttributeError):
+            s.pop()
         print('\n')
 
     def test_pop(self):
@@ -143,7 +145,8 @@ class T3_TestingTwoStackQueue(unittest.TestCase):
 
     def test_dequeue_empty(self):
         q = lab1.TwoStackQueue()
-        self.assertRaises(AttributeError, q.dequeue)
+        with self.assertRaises(AttributeError):
+            q.dequeue()
 
     def test_dequeue_once(self):
         q = lab1.TwoStackQueue()
