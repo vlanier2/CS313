@@ -1,3 +1,10 @@
+"""
+mheap.py
+    Implements a binary max-heap for use in a priority queue implementation.
+    Author: Vincent Lanier
+    Class: CIS 313
+"""
+
 class max_heap(object):
     """Binary max-heap
 
@@ -89,17 +96,36 @@ class max_heap(object):
         pass
 
     def __heapify(self, curr_index, list_length=None):
-        """Sift down the node at curr_index until the heap property is satisfised"""
-        # helper function for moving elements down in the heap
-        # Page 157 of CLRS book
-        pass
+        """Sift down at curr_index until the heap property is satisfised"""
+        left = self.__get_left(curr_index)
+        right = self.__get_right(curr_index)
+
+        print('start', curr_index, left, right)
+
+        if left < self.length and right < self.length:
+            largest = max(left, right, curr_index, key=lambda x : self.heap[x])
+        elif left < self.length:
+            largest = left if self.heap[left] > self.heap[curr_index] else curr_index
+        elif right < self.length:
+            largest = right if self.heap[right] > self.heap[curr_index] else curr_index
+        else: # reached a leaf - heap property maintained
+            return
+
+        if largest == curr_index: # heap property maintained
+            return
+
+        print('largest', largest)
+
+        self.__swap(curr_index, largest)
+        self.__heapify(largest)
+
 
     def build_heap(self):
         """Build a max heap from the stored list"""
-        # builds max heap from the list l.
-        # Tip: call __heapify() to build to the list
-        #    : Page 157 of CLRS book
-        pass
+        print('building')
+        for i in range((self.length-1) // 2, -1, -1):
+            print('heapify', i)
+            self.__heapify(i)
 
     ''' Optional helper methods may be used if required '''
     ''' You may create your own helper methods as required.'''

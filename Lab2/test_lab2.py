@@ -128,6 +128,7 @@ class T7_heap_insert(unittest.TestCase):
         with self.assertRaises(IndexError):
             heap.insert('4')
 
+
 class T8_heap_extract_max(unittest.TestCase):
 
     aheap = mheap.max_heap(data=[44, 35, 42, 33, 14, 19, 27, 10])
