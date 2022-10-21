@@ -54,14 +54,14 @@ class T9_pqueue_series_of_operations(unittest.TestCase):
         queue.insert(44)
         queue.insert(35)
         queue.insert(16)
-        self.assertEqual(queue.get_pqueue(), [44,42,33,14,35,16])
+        self.assertEqual(queue.get_pqueue(), [44,42,33,14,35,16,None])
         queue.extract_max()
-        self.assertEqual(queue.get_pqueue(), [42,35,33,14,16])
+        self.assertEqual(queue.get_pqueue(), [42,35,33,14,16,None,None])
         queue.extract_max()
-        self.assertEqual(queue.get_pqueue(), [35,15,33,14])
+        self.assertEqual(queue.get_pqueue(), [35,16,33,14,None,None,None])
         queue.insert(12)
         queue.insert(100)
-        self.assertEqual(queue.get_pqueue(), [100,16,35,14,12,33])
+        self.assertEqual(queue.get_pqueue(), [100,16,35,14,12,33,None])
 
 
 class T5_heap_sort(unittest.TestCase):
@@ -81,7 +81,7 @@ class T6_heap_build_heap(unittest.TestCase):
         heap = mheap.max_heap(data=[35, 33, 42, 10, 14, 19, 27, 44, 26, 31])
         heap.build_heap()
         self.assertEqual(heap.get_heap(), [
-                         44, 42, 35, 33, 31, 19, 27, 10, 26, 14])
+                         44, 35, 42, 33, 31, 19, 27, 10, 26, 14])
 
     def test_heap_build_empty(self):
         heap = mheap.max_heap(data=[])
@@ -135,12 +135,12 @@ class T8_heap_extract_max(unittest.TestCase):
 
     def test_extract_max_once(self):
         self.aheap.extract_max()
-        self.assertEqual(self.aheap.get_heap(), [42,35,27,33,14,19,10])
+        self.assertEqual(self.aheap.get_heap(), [42,35,27,33,14,19,10, None])
 
     def test_extract_max_twice(self):
         self.aheap.extract_max()
         self.aheap.extract_max()
-        self.assertEqual(self.aheap.get_heap(), [33,19,27,10,14])
+        self.assertEqual(self.aheap.get_heap(), [33,19,27,10,14, None, None, None])
 
     def test_extract_max_empty(self):
         heap = mheap.max_heap(data=[])

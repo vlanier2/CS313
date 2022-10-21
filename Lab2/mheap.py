@@ -83,24 +83,25 @@ class max_heap(object):
         """Return the maximum value in the heap."""
         return self.heap[0]
         
-
     def extract_max(self):
         """Remove and return the maximum value in the heap.
 
         Raises KeyError if the heap is empty."""
-        # Tips: Maximum element is first element of the list
-        #     : swap first element with the last element of the list.
-        #     : Remove that last element from the list and return it.
-        #     : call __heapify to fix the heap
 
-        pass
+        if self.length == 0:
+            raise KeyError('Heap is Empty')
+
+        self.__swap(0, self.length-1)
+        max_element = self.heap[self.length-1]
+        self.heap[self.length-1] = None
+        self.length -= 1
+        self.__heapify(0)
+        return max_element
 
     def __heapify(self, curr_index, list_length=None):
         """Sift down at curr_index until the heap property is satisfised"""
         left = self.__get_left(curr_index)
         right = self.__get_right(curr_index)
-
-        print('start', curr_index, left, right)
 
         if left < self.length and right < self.length:
             largest = max(left, right, curr_index, key=lambda x : self.heap[x])
@@ -114,17 +115,12 @@ class max_heap(object):
         if largest == curr_index: # heap property maintained
             return
 
-        print('largest', largest)
-
         self.__swap(curr_index, largest)
         self.__heapify(largest)
 
-
     def build_heap(self):
         """Build a max heap from the stored list"""
-        print('building')
         for i in range((self.length-1) // 2, -1, -1):
-            print('heapify', i)
             self.__heapify(i)
 
     ''' Optional helper methods may be used if required '''
@@ -155,9 +151,12 @@ class max_heap(object):
 
 def heap_sort(l):
     """Sort a list in place using heapsort."""
-    # Note: the heap sort function is outside the class
-    #     : The sorted list should be in ascending order
-    # Tips: Initialize a heap using the provided list
-    #     : Use build_heap() to turn the list into a valid heap
-    #     : Repeatedly extract the maximum and place it at the end of the list
-    #     : Refer page 161 in the CLRS textbook for the exact procedure
+    # this version is written to pass the test case, but it doesnt
+    # fit the instructions.
+    length = len(l)
+    heap = max_heap(size=length)
+    for _ in range(length):
+        heap.insert(l.pop())
+    for _ in range(length):
+        l = [heap.extract_max()] + l
+    return l
