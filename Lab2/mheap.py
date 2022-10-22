@@ -150,13 +150,10 @@ class max_heap(object):
 
 
 def heap_sort(l):
-    """Sort a list in place using heapsort."""
-    # this version is written to pass the test case, but it doesnt
-    # fit the instructions.
-    length = len(l)
-    heap = max_heap(size=length)
-    for _ in range(length):
-        heap.insert(l.pop())
-    for _ in range(length):
-        l = [heap.extract_max()] + l
-    return l
+    """Returns the given list in ascending order."""
+    new_list = [None] * len(l)
+    heap = max_heap(data=l)
+    heap.build_heap()
+    for i in range(len(l)-1, -1, -1):
+        new_list[i] = heap.extract_max()
+    return new_list
