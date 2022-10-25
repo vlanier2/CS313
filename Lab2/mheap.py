@@ -151,8 +151,8 @@ class max_heap(object):
 
 def heap_sort(l):
     """Returns the given list in ascending order."""
-    new_list = [None] * len(l)
-    heap = max_heap(data=l)
+    new_list = l.copy()
+    heap = max_heap(data=new_list)
     heap.build_heap()
     for i in range(len(l)-1, -1, -1):
         new_list[i] = heap.extract_max()

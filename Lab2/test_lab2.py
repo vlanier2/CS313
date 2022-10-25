@@ -70,7 +70,8 @@ class T5_heap_sort(unittest.TestCase):
         print("\n")
         to_sort_list = [10, 24, 3, 57, 4, 67, 37, 87, 7]
         sorted_list = mheap.heap_sort(to_sort_list)
-
+        print(to_sort_list)
+        print(sorted_list)
         self.assertEqual(sorted_list, [3, 4, 7, 10, 24, 37, 57, 67, 87])
         print("\n")
 
