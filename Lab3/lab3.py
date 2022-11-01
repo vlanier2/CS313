@@ -7,44 +7,101 @@ class Node(object):
 
 
 class Tree(object):
-    # Binary Search Tree
-    # class constants
+    """
+    A standard binary search tree. 
+
+    For a given node N it is guaranteed that each node in the subtree
+    rooted by its left child contains data less that in N, and each 
+    node in the subtree rooted by its right child contains data 
+    greater than that in N.
+
+    Attributes
+    -----
+    root : Node or None
+        A pointer to the root of the binary search tree
+
+    Methods
+    -----
+    print()
+        Print the data of all nodes in order
+
+    insert(data)
+        Insert a new node containing the given data
+
+    min()
+        Return the minimum value in the tree
+
+    max()
+        Return the maximum value in the treee
+
+    contains(data)
+        Return True if the data is found in the tree
+        Otherwise return false
+
+    inorder()
+        Return a generator over the tree data. Data is 
+        ordered as a 'inorder' traversal.
+
+    preorder()
+        Return a generator over the tree data. Data is 
+        ordered as a 'preorder' traversal.
+
+    postorder()
+        Return a generator over the tree data. Data is 
+        ordered as a 'postorder' traversal.
+
+    find_successor(data)
+        Return the node holding the successor of data.
+        Return False if data is not found.
+
+    delete(data) 
+        Remove the data from the tree.
+        Raises KeyError if data not found.
+    """
     PREORDER = 1
     INORDER = 2
     POSTORDER = 3
 
     def __init__(self):
-        # Do not create any other private variables.
-        # You may create more helper methods as needed.
+        """Initialze a new Binary Search Tree"""
         self.root = None
 
     def print(self):
-        # Print the data of all nodes in order
+        """Print the data of all nodes in order"""
         self.__print(self.root)
 
-
     def __print(self, curr_node):
-        # Recursively print a subtree (in order), rooted at curr_node
         if curr_node is not None:
             self.__print(curr_node.left)
-            print(str(curr_node.data), end=' ')  # save space
+            print(str(curr_node.data), end=' ')
             self.__print(curr_node.right)
-            
 
     def insert(self, data):
+        """
+        Insert a new node containing data
+
+        Parameters
+        -----
+        data : int or float
+            The value to be inserted
+        """
         # Find the right spot in the tree for the new node
         # Make sure to check if anything is in the tree
         # Hint: if a node n is None, calling n.data will cause an error
         pass
 
     def min(self):
-        # Returns the minimum value held in the tree
-        # Returns None if the tree is empty
+        """
+        Return the minimum value in the tree.
+        Return None if the tree is empty.
+        """
         pass
 
     def max(self):
-        # Returns the maximum value held in the tree
-        # Returns None if the tree is empty
+        """
+        Return the maximum value held in the tree
+        Return None if the tree is empty
+        """
         pass
 
     def __find_node(self, data):
@@ -52,8 +109,14 @@ class Tree(object):
         pass
 
     def contains(self, data):
-        # return True of node containing data is present in the tree.
-        # otherwise, return False.
+        """
+        Return True if the data is present in the tree. Otherwise, return False.
+
+        Parameters
+        -----
+        data : int or float
+            The value to look for
+        """
         # you may use a helper method __find_node() to find a particular node with the data value and return that node
         pass
 
@@ -62,39 +125,67 @@ class Tree(object):
         return self.inorder()
 
     def inorder(self):
-        # inorder traversal : (LEFT, ROOT, RIGHT)
+        """Return an inorder traversal generator"""
         return self.__traverse(self.root, Tree.INORDER)
 
     def preorder(self):
-        # preorder traversal : (ROOT, LEFT, RIGHT)
+        """Return a preorder traversal generator"""
         return self.__traverse(self.root, Tree.PREORDER)
 
     def postorder(self):
-        # postorder traversal : (LEFT, RIGHT, ROOT)
+        """Return a postorder traversal generator"""
         return self.__traverse(self.root, Tree.POSTORDER)
 
     def __traverse(self, curr_node, traversal_type):
         # helper method implemented using generators
         # all the traversals can be implemented using a single method
-        
-        #Yield data of the correct node/s
+
+        # Yield data of the correct node/s
         pass
 
     def find_successor(self, data):
+        """
+        Return the node containing the successor of data. Return None if no successor found.
+
+        The successor is the 'next larger' element found in the tree.
+
+        Parameters
+        -----
+        data : int or float
+            The data to find the sucessor of
+
+        Raises
+        -----
+        KeyError
+            If the given data is not found in the tree
+        """
         # Find the successor node
         # If the value specified by find_successor does NOT exist in the tree, then raise a KeyError
         # helper method to implement the delete method but may be called on its own
-        # If the right subtree of the node is nonempty,then the successor is just 
+        # If the right subtree of the node is nonempty,then the successor is just
         # the leftmost node in the right subtree.
         # If the right subtree of the node is empty, then go up the tree until a node that is
         # the left child of its parent is encountered. The parent of the found node will be the
         # successor to the initial node.
         # Note: Make sure to handle the case where the parent is None
-    
-    	# Return object of successor if found else return None
+
+        # Return object of successor if found else return None
         pass
 
     def delete(self, data):
+        """
+        Delete the given data from the tree
+
+        Parameters
+        -----
+        data : int or float
+            The data to delete from the tree
+
+        Raises
+        -----
+        KeyError
+            If the given data is not found in the tree
+        """
         # Find the node to delete.
         # If the value specified by delete does NOT exist in the tree, then don't change the tree and raise a KeyError
         # If you find the node and ...
@@ -104,7 +195,5 @@ class Tree(object):
         #       successor from its previous location.
         # Recall: The successor of a node is the left-most node in the node's right subtree.
         # Note: Make sure to handle the case where the parent is None
-    
+
         pass
-
-

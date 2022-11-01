@@ -1,9 +1,9 @@
 import lab3
 import unittest
 
-
-
 class T0_tree__insert(unittest.TestCase):
+
+    test_data = [10,9,8,3,2,1,4]
 
     def test_balanced_binary_search_tree(self):
         print("\n")
@@ -81,8 +81,34 @@ class T2_Traversal(unittest.TestCase):
         self.assertEqual(preorder, [4, 2, 1, 3, 6, 5, 7])
         print("\n")
 
+    def test_traversal_postorder(self):
+
+        t = lab3.Tree()
+        for d in self.test_data:
+            t.insert(d)
+        
+        self.assertEqual([n for n in t.postorder()], [2, 4, 3, 8, 12, 11, 10])
+
+    def test_traversal_empty(self):
+
+        t = lab3.Tree()
+        self.assertEqual([n for n in t.postorder], [])
+        self.assertEqual([n for n in t.preorder], [])
+        self.assertEqual([n for n in t.inorder], [])
 
 
+    def test_traversal_after_delete(self):
+
+        t = lab3.Tree()
+        for d in self.test_data:
+            t.insert(d)
+            t.delete(2)
+            t.delete(10)
+        self.assertEqual([n for n in t.postorder], [4, 3, 8, 12, 11])
+        self.assertEqual([n for n in t.preorder], [11, 8, 3, 4, 12])
+        self.assertEqual([n for n in t.inorder], [3, 4, 8, 11, 12])
+        
+        self.assertEqual()
 
 class T3_successor(unittest.TestCase):
 
@@ -109,6 +135,23 @@ class T3_successor(unittest.TestCase):
         self.assertEqual(tough_success, 8)
 
         print("\n")
+
+    def test_successor_empty(self):
+        t = lab3.Tree()
+        with self.assertRaises(KeyError):
+            t.find_successor(4)
+
+    def test_successor_after_delete(self):
+        t = lab3.Tree()
+        t.insert(1)
+        t.insert(3)
+        t.insert(-1)
+        self.assertEqual(t.find_successor(1).data, 3)
+        t.delete(3)
+        self.assertEqual(t.find_successor(1).data, None)
+        self.assertEqual(t.find_successor(-1).data, 1)
+        with self.assertRaises(KeyError):
+            t.find_successor(3)
 
 
 class T4_delete(unittest.TestCase):
@@ -137,8 +180,6 @@ class T4_delete(unittest.TestCase):
         t.delete(10)
         l5 = [node for node in t]
 
-
-
         self.assertEqual(l1, [1, 3, 4, 6, 7, 8, 10, 13, 14])
         self.assertEqual(l2, [1, 3, 4, 6, 8, 10, 13, 14])
         self.assertEqual(l3, [1, 3, 4, 8, 10, 13, 14])
@@ -146,6 +187,20 @@ class T4_delete(unittest.TestCase):
         self.assertEqual(l5, [1, 3, 4, 13, 14])
 
         print("\n")
+
+    def test_delete_empty(self):
+        t = lab3.Tree()
+        with self.assertRaises(KeyError):
+            t.delete('2')
+
+    def test_delete_final(self):
+        t = lab3.Tree()
+        t.insert(12)
+        t.delete(12)
+        self.assertEqual([n for n in t], [])
+        with self.assertRaises(KeyError):
+            t.delete(1)
+
 
 class T5_contains(unittest.TestCase):
 
@@ -165,6 +220,21 @@ class T5_contains(unittest.TestCase):
         self.assertEqual(t.contains(13), True)
         self.assertEqual(t.contains(15), False)
         print("\n")
+
+    def test_contains_empty(self):
+        t = lab3.Tree()
+        self.assertEqual(t.contains(34), False)
+        self.assertEqual(t.contains(0), False)
+
+    def test_contains_afterdelete(self):
+        t = lab3.Tree()
+        t.insert(1)
+        self.assertEqual(t.contains(1), True)
+        t.insert(2)
+        t.delete(1)
+        self.assertEqual(t.contains(2), True)
+        self.assertEqual(t.contains(1), False)
+
 
 if __name__ == '__main__' :
     unittest.main()
