@@ -31,6 +31,21 @@ class T0_tree__insert(unittest.TestCase):
 
         print("\n")
 
+    def test_insert_empty(self):
+        t = lab3.Tree()
+
+        t.insert(13)
+        self.assertEqual(t.root.data, 13)
+
+    def test_insert_delete_insert(self):
+        t = lab3.Tree()
+
+        t.insert(3)
+        t.insert(4)
+        t.delete(4)
+        t.insert(5)
+        self.assertEqual(t.root.right.data, 5)
+
 
 class T1_min_and_max(unittest.TestCase):
 
@@ -53,6 +68,13 @@ class T1_min_and_max(unittest.TestCase):
         self.assertEqual(maximum, 7)
 
         print("\n")
+
+    def test_min_and_max_empty(self):
+        t = lab3.Tree()
+
+        self.assertEqual(t.min(), None)
+        self.assertEqual(t.max(), None)
+
 
 class T2_Traversal(unittest.TestCase):
 
@@ -109,6 +131,7 @@ class T2_Traversal(unittest.TestCase):
         self.assertEqual([n for n in t.inorder], [3, 4, 8, 11, 12])
         
         self.assertEqual()
+
 
 class T3_successor(unittest.TestCase):
 
