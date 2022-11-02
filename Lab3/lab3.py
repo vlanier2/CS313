@@ -1,3 +1,11 @@
+"""
+CLASS: CS 313
+AUTHOR: Vincent Lanier
+TITLE: LAB 3
+CONTENTS: Binary Search Tree Implementation
+"""
+
+
 class Node(object):
     def __init__(self, data):
         self.parent = None
@@ -85,28 +93,66 @@ class Tree(object):
         data : int or float
             The value to be inserted
         """
-        # Find the right spot in the tree for the new node
-        # Make sure to check if anything is in the tree
-        # Hint: if a node n is None, calling n.data will cause an error
-        pass
+        new_node = Node(data)
+
+        if not self.root:
+            self.root = new_node
+            return
+
+        prev_node = None
+        curr_node = self.root
+        while curr_node:
+            data_is_less = data < curr_node.data
+            prev_node = curr_node
+            curr_node = curr_node.left if data_is_less else curr_node.right
+
+        if data_is_less:
+            prev_node.left = new_node
+        else:
+            prev_node.right = new_node
+
+        new_node.parent = prev_node
 
     def min(self):
         """
         Return the minimum value in the tree.
         Return None if the tree is empty.
         """
-        pass
+        if not self.root:
+            return
+
+        curr_node = self.root
+        while curr_node.left:
+            curr_node = curr_node.left
+        return curr_node.data
 
     def max(self):
         """
         Return the maximum value held in the tree
         Return None if the tree is empty
         """
-        pass
+        if not self.root:
+            return
+
+        curr_node = self.root
+        while curr_node.right:
+            curr_node = curr_node.right
+        return curr_node.data
 
     def __find_node(self, data):
-        # returns the node with that particular data value else returns None
-        pass
+        if not self.root:
+            return
+
+        curr_node = self.root
+        while curr_node and curr_node.data != data:
+            curr_node = curr_node.left if data < curr_node.data else curr_node.right
+        return curr_node
+
+    def find_node(self, data):
+        ### PUBLIC WRAPPER FOR FIND NODE ###
+        # Inserting this so I can unittest find_node as asked in the instructions
+        # It will also be tested in the successor tests as well as the contains tests
+        return self.__find_node(data)
 
     def contains(self, data):
         """
@@ -117,11 +163,9 @@ class Tree(object):
         data : int or float
             The value to look for
         """
-        # you may use a helper method __find_node() to find a particular node with the data value and return that node
-        pass
+        return self.__find_node(data) is not None
 
     def __iter__(self):
-        # iterate over the nodes with inorder traversal using a for loop
         return self.inorder()
 
     def inorder(self):
@@ -137,11 +181,18 @@ class Tree(object):
         return self.__traverse(self.root, Tree.POSTORDER)
 
     def __traverse(self, curr_node, traversal_type):
-        # helper method implemented using generators
-        # all the traversals can be implemented using a single method
-
-        # Yield data of the correct node/s
-        pass
+        if curr_node is None:  # PEP225?
+            return
+        if traversal_type is Tree.PREORDER:
+            yield curr_node.data
+        if curr_node.left:
+            yield from self.__traverse(curr_node.left, traversal_type)
+        if traversal_type is Tree.INORDER:
+            yield curr_node.data
+        if curr_node.right:
+            yield from self.__traverse(curr_node.right, traversal_type)
+        if traversal_type is Tree.POSTORDER:
+            yield curr_node.data
 
     def find_successor(self, data):
         """
@@ -159,18 +210,32 @@ class Tree(object):
         KeyError
             If the given data is not found in the tree
         """
-        # Find the successor node
-        # If the value specified by find_successor does NOT exist in the tree, then raise a KeyError
-        # helper method to implement the delete method but may be called on its own
-        # If the right subtree of the node is nonempty,then the successor is just
-        # the leftmost node in the right subtree.
-        # If the right subtree of the node is empty, then go up the tree until a node that is
-        # the left child of its parent is encountered. The parent of the found node will be the
-        # successor to the initial node.
-        # Note: Make sure to handle the case where the parent is None
 
-        # Return object of successor if found else return None
-        pass
+        curr_node = self.__find_node(data)
+
+        if curr_node is None:
+            raise KeyError(f'{data} does not exist in the tree')
+
+        if curr_node.right:
+            curr_node = curr_node.right
+            while curr_node.left:
+                curr_node = curr_node.left
+            return curr_node
+
+        while curr_node:
+            if curr_node.parent and curr_node.parent.left == curr_node:
+                return curr_node.parent
+            curr_node = curr_node.parent
+
+    def __transplant(self, node_a, node_b):
+        if node_a.parent is None:
+            self.root = node_b
+        elif node_a == node_a.parent.left:
+            node_a.parent.left = node_b
+        else:
+            node_a.parent.right = node_b
+        if node_b:
+            node_b.parent = node_a.parent
 
     def delete(self, data):
         """
@@ -186,14 +251,29 @@ class Tree(object):
         KeyError
             If the given data is not found in the tree
         """
-        # Find the node to delete.
-        # If the value specified by delete does NOT exist in the tree, then don't change the tree and raise a KeyError
-        # If you find the node and ...
-        #  a) The node has no children, just set it's parent's pointer to None.
-        #  b) The node has one child, make the nodes parent point to its child.
-        #  c) The node has two children, replace it with its successor, and remove
-        #       successor from its previous location.
-        # Recall: The successor of a node is the left-most node in the node's right subtree.
-        # Note: Make sure to handle the case where the parent is None
 
-        pass
+        curr_node = self.find_node(data)
+
+        if curr_node is None:
+            raise KeyError(f'{data} does not exist in the tree')
+
+        if curr_node.left is None:
+            self.__transplant(curr_node, curr_node.right)
+            return
+
+        if curr_node.right is None:
+            self.__transplant(curr_node, curr_node.left)
+            return
+
+        successor = curr_node.right
+        while(successor.left):
+            successor = successor.left
+
+        if successor.parent != curr_node:
+            self.__transplant(successor, successor.right)
+            successor.right = curr_node.right
+            successor.right.parent = successor
+
+        self.__transplant(curr_node, successor)
+        successor.left = curr_node.left
+        successor.left.parent = successor

@@ -1,9 +1,8 @@
 import lab3
 import unittest
 
-class T0_tree__insert(unittest.TestCase):
 
-    test_data = [10,9,8,3,2,1,4]
+class T0_tree__insert(unittest.TestCase):
 
     def test_balanced_binary_search_tree(self):
         print("\n")
@@ -18,8 +17,8 @@ class T0_tree__insert(unittest.TestCase):
         t.insert(5)
         t.insert(7)
 
-        #The following check is without using tree as an iterator (which uses inorder traversal)
-        #So this function also does not check the implementation of the traversal function
+        # The following check is without using tree as an iterator (which uses inorder traversal)
+        # So this function also does not check the implementation of the traversal function
 
         self.assertEqual(t.root.data, 4)
         self.assertEqual(t.root.left.data, 2)
@@ -78,6 +77,8 @@ class T1_min_and_max(unittest.TestCase):
 
 class T2_Traversal(unittest.TestCase):
 
+    test_data = [10, 11, 8, 3, 2, 12, 4]
+
     def test_traversal(self):
         print("\n")
         print("Checking all the three traversals")
@@ -93,7 +94,6 @@ class T2_Traversal(unittest.TestCase):
         tree_iterator = [node for node in t]
         inorder = [node for node in t.inorder()]
         preorder = [node for node in t.preorder()]
-        
 
         print("__iter__(): inorder traversal")
         self.assertEqual(tree_iterator, [1, 2, 3, 4, 5, 6, 7])
@@ -108,29 +108,26 @@ class T2_Traversal(unittest.TestCase):
         t = lab3.Tree()
         for d in self.test_data:
             t.insert(d)
-        
+
         self.assertEqual([n for n in t.postorder()], [2, 4, 3, 8, 12, 11, 10])
 
     def test_traversal_empty(self):
 
         t = lab3.Tree()
-        self.assertEqual([n for n in t.postorder], [])
-        self.assertEqual([n for n in t.preorder], [])
-        self.assertEqual([n for n in t.inorder], [])
-
+        self.assertEqual([n for n in t.postorder()], [])
+        self.assertEqual([n for n in t.preorder()], [])
+        self.assertEqual([n for n in t.inorder()], [])
 
     def test_traversal_after_delete(self):
 
         t = lab3.Tree()
         for d in self.test_data:
             t.insert(d)
-            t.delete(2)
-            t.delete(10)
-        self.assertEqual([n for n in t.postorder], [4, 3, 8, 12, 11])
-        self.assertEqual([n for n in t.preorder], [11, 8, 3, 4, 12])
-        self.assertEqual([n for n in t.inorder], [3, 4, 8, 11, 12])
-        
-        self.assertEqual()
+        t.delete(2)
+        t.delete(10)
+        self.assertEqual([n for n in t.postorder()], [4, 3, 8, 12, 11])
+        self.assertEqual([n for n in t.preorder()], [11, 8, 3, 4, 12])
+        self.assertEqual([n for n in t.inorder()], [3, 4, 8, 11, 12])
 
 
 class T3_successor(unittest.TestCase):
@@ -171,7 +168,7 @@ class T3_successor(unittest.TestCase):
         t.insert(-1)
         self.assertEqual(t.find_successor(1).data, 3)
         t.delete(3)
-        self.assertEqual(t.find_successor(1).data, None)
+        self.assertEqual(t.find_successor(1), None)
         self.assertEqual(t.find_successor(-1).data, 1)
         with self.assertRaises(KeyError):
             t.find_successor(3)
@@ -259,5 +256,23 @@ class T5_contains(unittest.TestCase):
         self.assertEqual(t.contains(1), False)
 
 
-if __name__ == '__main__' :
+class T6_find_node(unittest.TestCase):
+
+    t = lab3.Tree()
+    test_data = [10, 9, 8, 3, 2, 1, 4]
+    for n in test_data:
+        t.insert(n)
+
+    def test_find_node_empty(self):
+        t = lab3.Tree()
+        self.assertEqual(t.find_node(2), None)
+
+    def test_find_node_standard(self):
+        self.assertEqual(self.t.find_node(10).data, 10)
+
+    def test_find_node_not_found(self):
+        self.assertEqual(self.t.find_node(123), None)
+
+
+if __name__ == '__main__':
     unittest.main()
