@@ -1,3 +1,10 @@
+"""
+CS 313 LAB 4
+AUTHOR: VINCENT LANIER
+CONTENTS: RED BLACK TREE IMPLEMENTATION
+DATE: NOVEMBER 2022
+"""
+
 class Node(object):
     def __init__(self, data, left = None, right = None, parent = None, color = 'red'):
         self.data = data
@@ -8,7 +15,64 @@ class Node(object):
 
 
 class rb_tree(object):
+    """
+    A Red-Black Tree - A type of self-balancing Binary Search Tree. 
 
+    For a given node N it is guaranteed that each node in the subtree
+    rooted by its left child contains data less that in N, and each 
+    node in the subtree rooted by its right child contains data 
+    greater than that in N.
+
+    A Red-Black Tree guarantees that the longest path from the root to a leaf
+    is at most twice as long as the path from the root to the closest leaf.
+    As a consequence the height of the tree is at most 2 * lg(n+1) and is 
+    reasonably well balanced.
+
+    Attributes
+    -----
+    root : Node or None
+        A pointer to the root of the binary search tree
+
+    Methods
+    -----
+    print_tree()
+        Print the data of all nodes in order
+
+    insert(data)
+        Insert a new node containing the given data
+
+    find_min()
+        Return the node holding the minimum value in the tree
+
+    find_node(data)
+        Return the Node object for the given data
+
+    inorder()
+        Return a generator over the tree data. Data is 
+        ordered as a 'inorder' traversal.
+
+    preorder()
+        Return a generator over the tree data. Data is 
+        ordered as a 'preorder' traversal.
+
+    postorder()
+        Return a generator over the tree data. Data is 
+        ordered as a 'postorder' traversal.
+
+    find_successor(data)
+        Return the node holding the successor of data.
+        Return False if data is not found.
+
+    delete(data) 
+        Remove the data from the tree.
+        Raises KeyError if data not found.
+
+    left_rotate(current_node)
+        Performs a left rotation about the given node.
+
+    right_rotate(current_node)
+        Performs a right rotation about the given node.
+    """
     PREORDER = 1
     INORDER = 2
     POSTORDER = 3
@@ -38,7 +102,7 @@ class rb_tree(object):
         # Extracts the color of the node and print it in the format -dataC- where C is B for black and R for red
         if curr_node is not self.sentinel:
 
-            if curr_node.color is "red":
+            if curr_node.color == "red":
                 node_color = "R"
             else:
                 node_color = "B"
@@ -50,8 +114,7 @@ class rb_tree(object):
     def print_with_colors(self):
         # Also prints the data of all node but with color indicators
         self.__print_with_colors(self.root)
-            
-            
+              
     def __iter__(self):
         return self.inorder()
 
@@ -108,7 +171,6 @@ class rb_tree(object):
         else: # data is greater than current_node.data
             # recursively call __get with data and current_node's right
             return self.__get( data, current_node.right )
-    
 
     def find_successor(self, data):
         # Private Method, can only be used inside of BST.
@@ -137,7 +199,6 @@ class rb_tree(object):
         else:
             return None
 
-    # put adds a node to the tree
     def insert(self, data):
         # if the tree has a root
         if self.root:
@@ -182,7 +243,6 @@ class rb_tree(object):
                 current_node.right = new_node
         return new_node
 
-    
     def delete(self, data):
         # Same as binary tree delete, except we call rb_delete fixup at the end.
 
@@ -219,6 +279,21 @@ class rb_tree(object):
                 self.__rb_delete_fixup(x)
 
     def left_rotate(self, current_node):
+        """
+        Performs a left rotation about the given node. 
+
+        Rotations are operations that alter the structure of the Tree
+        around the given node. A left rotation will decrease the height
+        of the right subtree of current_node and increase the height of
+        the left subtree. All BST properties are maintained after the
+        rotation. WARNING - calling left_rotate alone does not update
+        node colors and may cause red-black violations.
+
+        Parameters
+        -----
+        current_node : Object of type Node
+            The node to left rotate
+        """
         # If there is nothing to rotate with, then raise a KeyError
         # if x is the root of the tree to rotate with left child subtree T1 and right child y, 
         # where T2 and T3 are the left and right children of y then:
@@ -230,6 +305,21 @@ class rb_tree(object):
         pass
     
     def right_rotate(self, current_node):
+        """
+        Performs a right rotation about the given node. 
+
+        Rotations are operations that alter the structure of the Tree
+        around the given node. A right rotation will decrease the height
+        of the left subtree of current_node and increase the height of
+        the right subtree. All BST properties are maintained after the
+        rotation. WARNING - calling right_rotate alone does not update
+        node colors and may cause red-black violations.
+
+        Parameters
+        -----
+        current_node : Object of type Node
+            The node to right rotate
+        """
         # If there is nothing to rotate with, then raise a KeyError
         # If y is the root of the tree to rotate with right child subtree T3 and left child x, 
         # where T1 and T2 are the left and right children of x then:
@@ -239,9 +329,23 @@ class rb_tree(object):
         # refer page 328 of CLRS book for rotations
 
         pass
-
-    
+ 
     def __rb_insert_fixup(self, z):
+        """
+        Resolves red-red conflicts after insertion at the given position in the tree.
+
+        Red-Black trees must maintain equivalent black height in all paths.
+        That is, all paths from the root to a leaf must contain the same 
+        number of black nodes. Red-Black trees must also not allow red nodes
+        to be adjacent in any path. rb_insert_fixup considers all needed cases
+        to resolve red-red conflicts and maintain Red-Black properties after 
+        inserting a new red node z.
+
+        Paremeters
+        -----
+        z : Object of type Node
+            Node inserted per BST insertion algorithm
+        """
         # This function maintains the balancing and coloring property after bst insertion into
         # the tree. Please red the code for insert() method to get a better understanding
         # refer page 330 of CLRS book and lecture slides for rb_insert_fixup
@@ -249,15 +353,78 @@ class rb_tree(object):
         pass
 
     def __rb_delete_fixup(self, x):
+        """
+        Resolves red-red conflicts after deletion at the given position in the tree.
+
+        Red-Black trees must maintain equivalent black height in all paths.
+        That is, all paths from the root to a leaf must contain the same 
+        number of black nodes. Red-Black trees must also not allow red nodes
+        to be adjacent in any path. rb_delete_fixup considers all needed cases
+        to resolve red-red conflicts and maintain Red-Black properties after 
+        deleting a node and replacing it with it's child x.
+
+        Paremeters
+        -----
+        x : Object of type Node
+            Child node of the node removed per BST deletion algorithm
+        """
         # This function maintains the balancing and coloring property after bst deletion 
         # from the tree. Please read the code for delete() method to get a better understanding.
         # refer page 338 of CLRS book and lecture slides for rb_delete_fixup
         
         pass
 
+if __name__ == "__main__":
 
-    
+    case1 = rb_tree()
+    case1.bst_insert(10)
+    print('case1')
+    case1.print_tree()
+    print([node.data for node in case1.inorder()])
+    print()
 
+    case2 = rb_tree()
+    case2.bst_insert(10)
+    case2.bst_insert(5)
+    case2.bst_insert(15)
+    print('case2')
+    case2.print_tree()
+    print([node.data for node in case2.inorder()])
+    print()
 
-    
+    case3 = rb_tree()
+    case3.bst_insert(10)
+    case3.bst_insert(5)
+    case3.bst_insert(15)
+    case3.bst_insert(12)
+    print('case3')
+    case3.print_tree()
+    print([node.data for node in case3.inorder()])
+    print()
+
+    case4 = rb_tree()
+    case4.bst_insert(10)
+    case4.bst_insert(5)
+    case4.bst_insert(15)
+    case4.bst_insert(12)
+    case4.bst_insert(20)
+    print('case4')
+    case4.print_tree()
+    print([node.data for node in case4.inorder()])
+    print()
+
+    print('------------------------------------------------')
+
+    print("\n")
+    print("tree_insert")
+    print("checking in order, preorder and post order")
+    tree = rb_tree()
+    for i in range(1, 8):
+        tree.insert(i)
+    tree.delete(5)
+    tree.delete(4)
+    tree_preorder = [node.data for node in tree.preorder()]
+    tree_preorder_color = [node.color for node in tree.preorder()]
+    print("\n")
+    print('finosehd ')
     

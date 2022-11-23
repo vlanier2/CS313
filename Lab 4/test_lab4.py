@@ -191,6 +191,141 @@ class T3_tree_delete(unittest.TestCase):
         self.assertEqual(tree_preorder_color, ['black', 'red', 'black', 'black', 'red', 'black', 'red'])
         print("\n")
 
+class T4_tree_rotation_intermediate(unittest.TestCase):
+
+    T = rb_tree()
+    a = Node('a')
+    b = Node('b')
+    c = Node('c')
+    d = Node('d')
+    e = Node('e')
+    f = Node('f')
+    g = Node('g')
+    T.root = a
+    a.left, a.right = b, c
+    b.left, b.right = d, e
+    c.left, c.right = f, g
+    b.parent = a
+    c.parent = a
+    d.parent = b
+    e.parent = b
+    f.parent = c
+    g.parent = c
+
+    for node in [d,e,f,g]:
+        node.left, node.right = T.sentinel, T.sentinel
+
+    a.parent = T.sentinel
+
+    def test_right_rotation(self):
+
+        self.T.right_rotate(self.T.root.left)
+
+        self.assertEqual(self.T.root.data, 'c')
+        self.assertEqual(self.T.root.left.data, 'a')
+        self.assertEqual(self.T.root.right.data, 'g')
+        self.assertEqual(self.T.root.left.left.data, 'b')
+        self.assertEqual(self.T.root.left.right.data, 'f')
+        self.assertEqual(self.T.root.right.left.data, None)
+        self.assertEqual(self.T.root.right.right.data, None)
+
+        self.assertEqual(self.T.root.parent.data, None)
+        self.assertEqual(self.T.root.left.parent.data, 'c')
+        self.assertEqual(self.T.root.right.parent.data, 'c')
+        self.assertEqual(self.T.root.left.left.parent.data, 'a')
+        self.assertEqual(self.T.root.left.right.parent.data, 'a')
+        #self.assertEqual(self.T.root.right.left.parent.data, )
+        #self.assertEqual(self.T.root.right.right.parent.data, )
+
+    def test_left_rotation(self):
+
+        self.T.right_rotate(self.T.root.right)
+
+        self.assertEqual(self.T.root.data, 'b')
+        self.assertEqual(self.T.root.left.data, 'd')
+        self.assertEqual(self.T.root.right.data, 'a')
+        self.assertEqual(self.T.root.left.left.data, None)
+        self.assertEqual(self.T.root.left.right.data, None)
+        self.assertEqual(self.T.root.right.left.data, 'e')
+        self.assertEqual(self.T.root.right.right.data, 'c')
+
+        self.assertEqual(self.T.root.parent.data, None)
+        self.assertEqual(self.T.root.left.parent.data, 'b')
+        self.assertEqual(self.T.root.right.parent.data, 'b')
+        #self.assertEqual(self.T.root.left.left.parent.data, )
+        #self.assertEqual(self.T.root.left.right.parent.data, )
+        self.assertEqual(self.T.root.right.left.parent.data, 'a')
+        self.assertEqual(self.T.root.right.right.parent.data, 'a')
+
+class T5_tree_insert_color_validation(unittest.TestCase):
+        
+    def test_small_inserts(self):
+        test_vals = [10, 18, 7, 15, 16]
+        T = rb_tree()
+        for val in test_vals: T.insert(val)
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+
+        self.assertEqual(tree_preorder, [10, 7, 16, 15, 18])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'black', 'red', 'red'])
+
+    def test_additional_insert(self):
+        test_vals = [10, 18, 7, 15, 16, 25, 23]
+        T = rb_tree()
+        for val in test_vals: T.insert(val)
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+
+        self.assertEqual(tree_preorder, [10, 7, 16, 15, 23, 18, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black', 'red', 'red'])
+
+class T6_tree_deletion_color_validation(unittest.TestCase):
+
+    def test_small_deletion(self):
+        test_vals = [10, 18, 7, 15, 16]
+        T = rb_tree()
+        for val in test_vals: T.insert(val)
+        T.delete(16)
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+        
+        self.assertEqual(tree_preorder, [10, 7, 15, 18])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'black', 'red'])
+
+    def test_med_deletion(self):
+        test_vals = [10, 18, 7, 15, 16, 25]
+        T = rb_tree()
+        for val in test_vals: T.insert(val)
+        T.delete(10)
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+        
+        self.assertEqual(tree_preorder, [15, 7, 18, 16, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black'])
+
+class T7_tree_operations_series_color_validation(unittest.TestCase):
+
+    def test_med_delete_insert_delete(self):
+        test_vals = [10, 18, 7, 15, 16, 25]
+        T = rb_tree()
+        for val in test_vals: T.insert(val)
+        T.delete(10)
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+        
+        self.assertEqual(tree_preorder, [15, 7, 18, 16, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black'])
+
+        T.insert(19)
+        T.insert(20)
+
+        self.assertEqual(tree_preorder, [15, 7, 18, 16, 20, 19, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black', 'red', 'red'])
+
+        T.delete(20)
+
+        self.assertEqual(tree_preorder, [15, 7, 18, 16, 25, 19])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black', 'red'])
 
 if __name__ == "__main__":
     unittest.main()
