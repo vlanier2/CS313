@@ -294,15 +294,23 @@ class rb_tree(object):
         current_node : Object of type Node
             The node to left rotate
         """
-        # If there is nothing to rotate with, then raise a KeyError
-        # if x is the root of the tree to rotate with left child subtree T1 and right child y, 
-        # where T2 and T3 are the left and right children of y then:
-        # x becomes left child of y and T3 as its right child of y
-        # T1 becomes left child of x and T2 becomes right child of x
+        if (not current_node or current_node is self.sentinel 
+            or current_node.right is self.sentinel):
+            raise KeyError('Left rotation requires Node and Node.right')
 
-        # refer page 328 of CLRS book for rotations
-
-        pass
+        temp_right = current_node.right
+        current_node.right = temp_right.left
+        if temp_right.left != self.sentinel:
+            temp_right.left.parent = current_node
+        temp_right.parent = current_node.parent
+        if temp_right.parent == self.sentinel:
+            self.root = temp_right
+        elif current_node == current_node.parent.left:
+            current_node.parent.left = temp_right
+        else:
+            current_node.parent.right = temp_right
+        temp_right.left = current_node
+        current_node.parent = temp_right
     
     def right_rotate(self, current_node):
         """
@@ -320,15 +328,23 @@ class rb_tree(object):
         current_node : Object of type Node
             The node to right rotate
         """
-        # If there is nothing to rotate with, then raise a KeyError
-        # If y is the root of the tree to rotate with right child subtree T3 and left child x, 
-        # where T1 and T2 are the left and right children of x then:
-        # y becomes right child of x and T1 as its left child of x
-        # T2 becomes left child of y and T3 becomes right child of y
+        if (not current_node or current_node is self.sentinel 
+            or current_node.left is self.sentinel):
+            raise KeyError('Right rotation requires Node and Node.left')
 
-        # refer page 328 of CLRS book for rotations
-
-        pass
+        temp_left = current_node.left
+        current_node.left = temp_left.right
+        if temp_left.right != self.sentinel:
+            temp_left.right.parent = current_node
+        temp_left.parent = current_node.parent
+        if temp_left.parent == self.sentinel:
+            self.root = temp_left
+        elif current_node == current_node.parent.right:
+            current_node.parent.right = temp_left
+        else:
+            current_node.parent.left = temp_left
+        temp_left.right = current_node
+        current_node.parent = temp_left
  
     def __rb_insert_fixup(self, z):
         """

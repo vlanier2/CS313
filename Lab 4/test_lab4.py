@@ -191,71 +191,89 @@ class T3_tree_delete(unittest.TestCase):
         self.assertEqual(tree_preorder_color, ['black', 'red', 'black', 'black', 'red', 'black', 'red'])
         print("\n")
 
-class T4_tree_rotation_intermediate(unittest.TestCase):
+class T4_tree_rotation_continued(unittest.TestCase):
 
-    T = rb_tree()
-    a = Node('a')
-    b = Node('b')
-    c = Node('c')
-    d = Node('d')
-    e = Node('e')
-    f = Node('f')
-    g = Node('g')
-    T.root = a
-    a.left, a.right = b, c
-    b.left, b.right = d, e
-    c.left, c.right = f, g
-    b.parent = a
-    c.parent = a
-    d.parent = b
-    e.parent = b
-    f.parent = c
-    g.parent = c
+    def test_left_rotation_root(self):
 
-    for node in [d,e,f,g]:
-        node.left, node.right = T.sentinel, T.sentinel
+        T = rb_tree()
+        a = Node('a')
+        b = Node('b')
+        c = Node('c')
+        d = Node('d')
+        e = Node('e')
+        f = Node('f')
+        g = Node('g')
+        T.root = a
+        a.left, a.right = b, c
+        b.left, b.right = d, e
+        c.left, c.right = f, g
+        b.parent = a
+        c.parent = a
+        d.parent = b
+        e.parent = b
+        f.parent = c
+        g.parent = c
 
-    a.parent = T.sentinel
+        for node in [d,e,f,g]:
+            node.left, node.right = T.sentinel, T.sentinel
 
-    def test_right_rotation(self):
+        a.parent = T.sentinel
 
-        self.T.right_rotate(self.T.root.left)
 
-        self.assertEqual(self.T.root.data, 'c')
-        self.assertEqual(self.T.root.left.data, 'a')
-        self.assertEqual(self.T.root.right.data, 'g')
-        self.assertEqual(self.T.root.left.left.data, 'b')
-        self.assertEqual(self.T.root.left.right.data, 'f')
-        self.assertEqual(self.T.root.right.left.data, None)
-        self.assertEqual(self.T.root.right.right.data, None)
+        tree_preorder = [node.data for node in T.preorder()]
+        print(tree_preorder)
 
-        self.assertEqual(self.T.root.parent.data, None)
-        self.assertEqual(self.T.root.left.parent.data, 'c')
-        self.assertEqual(self.T.root.right.parent.data, 'c')
-        self.assertEqual(self.T.root.left.left.parent.data, 'a')
-        self.assertEqual(self.T.root.left.right.parent.data, 'a')
+        T.left_rotate(T.root)
+
+        self.assertEqual(T.root.data, 'c')
+        self.assertEqual(T.root.left.data, 'a')
+        self.assertEqual(T.root.right.data, 'g')
+        self.assertEqual(T.root.left.left.data, 'b')
+        self.assertEqual(T.root.left.right.data, 'f')
+        self.assertEqual(T.root.right.left.data, None)
+        self.assertEqual(T.root.right.right.data, None)
+
+        self.assertEqual(T.root.parent.data, None)
+        self.assertEqual(T.root.left.parent.data, 'c')
+        self.assertEqual(T.root.right.parent.data, 'c')
+        self.assertEqual(T.root.left.left.parent.data, 'a')
+        self.assertEqual(T.root.left.right.parent.data, 'a')
         #self.assertEqual(self.T.root.right.left.parent.data, )
         #self.assertEqual(self.T.root.right.right.parent.data, )
 
-    def test_left_rotation(self):
+    def test_left_rotation_intermediate(self):
 
-        self.T.right_rotate(self.T.root.right)
+        T = rb_tree()
+        a = Node('a')
+        b = Node('b')
+        c = Node('c')
+        d = Node('d')
+        e = Node('e')
+        f = Node('f')
+        g = Node('g')
+        T.root = a
+        a.left, a.right = b, c
+        b.left, b.right = d, e
+        c.left, c.right = f, g
+        b.parent = a
+        c.parent = a
+        d.parent = b
+        e.parent = b
+        f.parent = c
+        g.parent = c
 
-        self.assertEqual(self.T.root.data, 'b')
-        self.assertEqual(self.T.root.left.data, 'd')
-        self.assertEqual(self.T.root.right.data, 'a')
-        self.assertEqual(self.T.root.left.left.data, None)
-        self.assertEqual(self.T.root.left.right.data, None)
-        self.assertEqual(self.T.root.right.left.data, 'e')
-        self.assertEqual(self.T.root.right.right.data, 'c')
+        for node in [d,e,f,g]:
+            node.left, node.right = T.sentinel, T.sentinel
 
-        self.assertEqual(self.T.root.parent.data, None)
-        self.assertEqual(self.T.root.left.parent.data, 'b')
-        self.assertEqual(self.T.root.right.parent.data, 'b')
-        #self.assertEqual(self.T.root.left.left.parent.data, )
-        #self.assertEqual(self.T.root.left.right.parent.data, )
-        self.assertEqual(self.T.root.right.left.parent.data, 'a')
-        self.assertEqual(self.T.root.right.right.parent.data, 'a')
+        a.parent = T.sentinel
+
+        T.left_rotate(T.root)
+        T.left_rotate(T.root.left)
+
+        self.assertEqual(T.root.left.data, 'f')
+        self.assertEqual(T.root.left.left.data, 'a')
+        self.assertEqual(T.root.left.right.data, None )
+
 
 class T5_tree_insert_color_validation(unittest.TestCase):
         
