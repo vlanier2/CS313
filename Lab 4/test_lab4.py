@@ -322,8 +322,8 @@ class T6_tree_deletion_color_validation(unittest.TestCase):
         tree_preorder = [node.data for node in T.preorder()]
         tree_preorder_color = [node.color for node in T.preorder()]
         
-        self.assertEqual(tree_preorder, [15, 7, 18, 16, 25])
-        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black'])
+        self.assertEqual(tree_preorder, [7, 15, 16, 18, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'red'])
 
 class T7_tree_operations_series_color_validation(unittest.TestCase):
 
@@ -335,19 +335,23 @@ class T7_tree_operations_series_color_validation(unittest.TestCase):
         tree_preorder = [node.data for node in T.preorder()]
         tree_preorder_color = [node.color for node in T.preorder()]
         
-        self.assertEqual(tree_preorder, [15, 7, 18, 16, 25])
-        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black'])
+        self.assertEqual(tree_preorder, [7, 15, 16, 18, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'red'])
 
         T.insert(19)
         T.insert(20)
 
-        self.assertEqual(tree_preorder, [15, 7, 18, 16, 20, 19, 25])
-        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black', 'red', 'red'])
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+
+        self.assertEqual(tree_preorder, [7, 16, 15, 19, 18, 25, 20])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'red', 'black', 'black', 'red'])
 
         T.delete(20)
-
-        self.assertEqual(tree_preorder, [15, 7, 18, 16, 25, 19])
-        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'black', 'black', 'red'])
+        tree_preorder = [node.data for node in T.preorder()]
+        tree_preorder_color = [node.color for node in T.preorder()]
+        self.assertEqual(tree_preorder, [7, 16, 15, 19, 18, 25])
+        self.assertEqual(tree_preorder_color, ['black', 'black', 'red', 'red', 'black', 'black'])
 
 if __name__ == "__main__":
     unittest.main()
