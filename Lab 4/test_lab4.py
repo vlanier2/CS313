@@ -95,6 +95,7 @@ class T2_tree_insert_color(unittest.TestCase):
         tree = rb_tree()
 
         tree.insert(2)
+        tree.print_with_colors()
         tree.insert(1)
         tree.insert(3)
         tree.insert(4)
@@ -307,13 +308,16 @@ class T6_tree_deletion_color_validation(unittest.TestCase):
         tree_preorder = [node.data for node in T.preorder()]
         tree_preorder_color = [node.color for node in T.preorder()]
         
-        self.assertEqual(tree_preorder, [10, 7, 15, 18])
+        self.assertEqual(tree_preorder, [10, 7, 18, 15])
         self.assertEqual(tree_preorder_color, ['black', 'black', 'black', 'red'])
 
     def test_med_deletion(self):
         test_vals = [10, 18, 7, 15, 16, 25]
         T = rb_tree()
         for val in test_vals: T.insert(val)
+
+        T.print_with_colors()
+
         T.delete(10)
         tree_preorder = [node.data for node in T.preorder()]
         tree_preorder_color = [node.color for node in T.preorder()]

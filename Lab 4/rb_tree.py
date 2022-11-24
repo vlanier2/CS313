@@ -346,6 +346,20 @@ class rb_tree(object):
         temp_left.right = current_node
         current_node.parent = temp_left
  
+    def __uncle(self, node):
+        gp = node.parent.parent
+        return gp.left if gp.right == node.parent else gp.right
+
+    def __recolor(self, node):
+        if node != self.sentinel:
+            node.color = 'red' if node.color == 'black' else 'black'
+
+    def __sibling(self, node):
+        return node.parent.left if node.parent.right == node else node.parent.right
+
+    def __is_right_child(self, node):
+        return node.parent.right == node
+
     def __rb_insert_fixup(self, z):
         """
         Resolves red-red conflicts after insertion at the given position in the tree.
@@ -362,11 +376,45 @@ class rb_tree(object):
         z : Object of type Node
             Node inserted per BST insertion algorithm
         """
-        # This function maintains the balancing and coloring property after bst insertion into
-        # the tree. Please red the code for insert() method to get a better understanding
-        # refer page 330 of CLRS book and lecture slides for rb_insert_fixup
 
-        pass
+        if z == self.root:
+            z.color = 'black'
+            return
+
+        # case were red is ok because parent is black
+
+        if z.parent.color == 'black':
+            return
+
+        if self.__uncle(z).color == 'red':
+            for n in [z.parent, z.parent.parent, self.__uncle(z)]:
+                self.__recolor(n)
+            self.__rb_insert_fixup(z.parent.parent)
+
+        else:   #self.__uncle(node).color == 'black':
+                #uncle is black
+
+            if self.__is_right_child(z.parent): #right 'mirror'
+
+                if not self.__is_right_child(z): #triangle case turns to line case
+                    self.right_rotate(z.parent)
+                    z = z.right
+
+                #is 'line' case
+                z.parent.color = 'black'
+                z.parent.parent.color = 'red'
+                self.left_rotate(z.parent.parent)
+
+            else: #left 'mirror'
+
+                if self.__is_right_child(z): #triangle case for left mirror
+                    self.left_rotate(z.parent)
+                    z = z.left
+                
+                #is line case for left mirror
+                z.parent.color = 'black'
+                z.parent.parent.color = 'red'
+                self.right_rotate(z.parent.parent)
 
     def __rb_delete_fixup(self, x):
         """
@@ -384,63 +432,49 @@ class rb_tree(object):
         x : Object of type Node
             Child node of the node removed per BST deletion algorithm
         """
-        # This function maintains the balancing and coloring property after bst deletion 
-        # from the tree. Please read the code for delete() method to get a better understanding.
-        # refer page 338 of CLRS book and lecture slides for rb_delete_fixup
-        
-        pass
 
-if __name__ == "__main__":
+        while x != self.root and x.color == 'black':
 
-    case1 = rb_tree()
-    case1.bst_insert(10)
-    print('case1')
-    case1.print_tree()
-    print([node.data for node in case1.inorder()])
-    print()
+            if x == x.parent.left:
+                w = x.parent.right
+                if w.color == 'red':
+                    w.color = 'black'
+                    x.parent.color = 'red'
+                    self.left_rotate(x.parent)
+                    w = x.parent.right
+                if w.left.color == 'black' and w.right.color == 'black':
+                    w.color = 'red'
+                    x = x.parent
+                elif w.right.color == 'black':
+                    w.left.color = 'black'
+                    w.color = 'red'
+                    self.right_rotate(w)
+                    w = x.parent.right
+                w.color = x.parent.color
+                x.parent.color = 'black'
+                w.right.color = 'black'
+                self.left_rotate(x.parent)
+                x = self.root
 
-    case2 = rb_tree()
-    case2.bst_insert(10)
-    case2.bst_insert(5)
-    case2.bst_insert(15)
-    print('case2')
-    case2.print_tree()
-    print([node.data for node in case2.inorder()])
-    print()
+            else:
+                w = x.parent.left
+                if w.color == 'red':
+                    w.color = 'black'
+                    x.parent.color = 'red'
+                    self.right_rotate(x.parent)
+                    w = x.parent.left
+                if w.right.color == 'black' and w.left.color == 'black':
+                    w.color = 'red'
+                    x = x.parent
+                elif w.left.color == 'black':
+                    w.right.color = 'black'
+                    w.color = 'red'
+                    self.left_rotate(w)
+                    w = x.parent.left
+                w.color = x.parent.color
+                x.parent.color = 'black'
+                w.left.color = 'black'
+                self.right_rotate(x.parent)
+                x = self.root
 
-    case3 = rb_tree()
-    case3.bst_insert(10)
-    case3.bst_insert(5)
-    case3.bst_insert(15)
-    case3.bst_insert(12)
-    print('case3')
-    case3.print_tree()
-    print([node.data for node in case3.inorder()])
-    print()
-
-    case4 = rb_tree()
-    case4.bst_insert(10)
-    case4.bst_insert(5)
-    case4.bst_insert(15)
-    case4.bst_insert(12)
-    case4.bst_insert(20)
-    print('case4')
-    case4.print_tree()
-    print([node.data for node in case4.inorder()])
-    print()
-
-    print('------------------------------------------------')
-
-    print("\n")
-    print("tree_insert")
-    print("checking in order, preorder and post order")
-    tree = rb_tree()
-    for i in range(1, 8):
-        tree.insert(i)
-    tree.delete(5)
-    tree.delete(4)
-    tree_preorder = [node.data for node in tree.preorder()]
-    tree_preorder_color = [node.color for node in tree.preorder()]
-    print("\n")
-    print('finosehd ')
-    
+        x.color = 'black'
